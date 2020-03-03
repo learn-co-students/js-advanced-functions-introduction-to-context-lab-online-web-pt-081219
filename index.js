@@ -18,7 +18,7 @@ function createTimeInEvent(employee, dateStamp) {
     let [date, time] = dateStamp.split(' ')
     employee.timeInEvents.push({
         type: "TimeIn", 
-        hour: parseInt(time, 10), 
+        hour: parseInt(time), 
         date: date
     })
     return employee
@@ -34,7 +34,7 @@ function createTimeOutEvent(employee, dateStamp) {
     return employee
 }; 
 
-function hoursWorkedonDate(employee, date) {
+function hoursWorkedOnDate(employee, date) {
     let dateIn = employee.timeInEvents.find(day => day.date === date)
     let dateOut = employee.timeOutEvents.find(day => day.date === date)
     let hoursWorked = (dateOut.hour - dateIn.hour) / 100 
@@ -42,7 +42,7 @@ function hoursWorkedonDate(employee, date) {
 }; 
 
 function wagesEarnedOnDate(employee, date) {
-    return hoursWorkedonDate(employee, date) * employee.payPerHour
+    return hoursWorkedOnDate(employee, date) * employee.payPerHour
 }; 
 
 function allWagesFor(employee) {
