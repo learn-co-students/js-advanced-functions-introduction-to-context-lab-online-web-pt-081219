@@ -42,7 +42,12 @@ function createTimeOutEvent(employee, time) {
 function hoursWorkedOnDate(employee, workingDate) {
     let inEvent = employee.timeInEvents.find(event => event.date === workingDate);
     let outEvent = employee.timeOutEvents.find(event => event.date === workingDate);
-    return (outEvent.hour - inEvent.hour)/100;
+    try {
+        return (outEvent.hour - inEvent.hour) / 100;
+    } catch(e){
+        console.error(e.name + ": " + e.message);
+        console.error("Missing date field!");
+    }
 }
 
 function wagesEarnedOnDate(employee, workingDate) {
