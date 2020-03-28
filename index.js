@@ -20,9 +20,57 @@ function createEmployeeRecords(employees) {
 }
 
 function createTimeInEvent(employee, time) {
-    employee.timeInEvents = {
+    let [date, hour] = time.split(" ");
+    employee.timeInEvents.push({
         type: "TimeIn",
-        in: time
-    }
+        hour: parseInt(hour, 10),
+        date: date
+    });
+    return employee
+}
+
+function createTimeOutEvent(employee, time) {
+    let [date, hour] = time.split(" ");
+    employee.timeOutEvents.push({
+        type: "TimeOut",
+        hour: parseInt(hour, 10),
+        date: date
+    });
+    return employee
+}
+
+function hoursWorkedOnDate(employee, workingDate) {
+    let inEvent = employee.timeInEvents.find(event => event.date === workingDate);
+    let outEvent = employee.timeOutEvents.find(event => event.date === workingDate);
+    return (outEvent.hour - inEvent.hour)/100;
+}
+
+function wagesEarnedOnDate(employee, workingDate) {
+    let hoursWorked = hoursWorkedOnDate(employee, workingDate);
+    return hoursWorked * employee.payPerHour;
+}
+
+function allWagesFor(employee) {
+    let dates = employee.timeInEvents.map(event => event.date);
+    let wages = dates.map(date => wagesEarnedOnDate(employee, date));
+
+    let total = wages.reduce(add, 0);
+
+    return total;
+}
+
+function calculatePayroll(employees) {
+    let allPayroll = employees.map(employee => allWagesFor(employee));
+    let totalPayroll = allPayroll.reduce(add, 0);
+    return totalPayroll;
+}
+
+function findEmployeeByFirstName(employees, firstName) {
+    let employee = employees.find(emp => emp.firstName == firstName);
     return employee;
+}
+
+//helper function for reduce
+function add(total, wage) {
+    return total + wage;
 }
